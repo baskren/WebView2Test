@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "WebView2Test",
+  "display": "standalone",
+  "name": "WebView2Test",
+  "short_name": "WebView2Test",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

@@ -1,0 +1,30 @@
+﻿<Page x:Class="WebView2Test.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:WebView2Test"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid
+        x:Name="myGrid"
+        >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            Text="WebView2 Test"
+            Margin="10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"/>
+        <Rectangle
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Fill="Pink" />
+        <WebView2
+            Grid.Row="1"
+            x:Name="myWebView"
+            Margin="0"
+            Source="https://slashdot.org"
+            />
+    </Grid>
+</Page>

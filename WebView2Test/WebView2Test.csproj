@@ -1,0 +1,84 @@
+﻿<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+      <TargetFrameworks>net9.0-ios;net9.0-maccatalyst;net9.0-android</TargetFrameworks>
+      <TargetFrameworks Condition=" ( $([MSBuild]::IsOSPlatform('windows')) OR '$(EnableWindowsTargeting)' == 'true' )">
+          $(TargetFrameworks);
+          net9.0-windows10.0.26100
+      </TargetFrameworks>
+      <!-- NEEDED TO GET -browserwasm TO BUILD USING BELOW WebView2 WORKAROUND -->
+      <TargetFrameworks Condition=" $(Platform) == 'AnyCPU' ">
+          $(TargetFrameworks);
+          net9.0-browserwasm
+      </TargetFrameworks>
+      <TargetFrameworks>$(TargetFrameworks);net9.0-desktop;</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>WebView2Test</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.companyname.webview2test</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>WebView2Test</ApplicationPublisher>
+    <!-- Package Description -->
+    <Description>WebView2Test powered by Uno Platform.</Description>
+    <!--
+      If you encounter this error message:
+
+        error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
+        Please update to a newer .NET SDK in order to reference this assembly.
+
+      This means that the two packages below must be aligned with the "build" version number of
+      the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
+      must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
+    -->
+    <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+    </UnoFeatures>
+
+      <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+  </PropertyGroup>
+
+    <PropertyGroup  Condition=" $(TargetFramework.Contains('-windows')) ">
+        <!-- Workaround for https://github.com/unoplatform/uno/issues/18552 -->
+        <PlatformTarget Condition=" '$(PlatformTarget)' == '' AND $(Platform) == 'AnyCPU' AND '$(NETCoreSdkRuntimeIdentifier)' == 'win-x86'">x86</PlatformTarget>
+        <PlatformTarget Condition=" '$(PlatformTarget)' == '' AND $(Platform) == 'AnyCPU' AND '$(NETCoreSdkRuntimeIdentifier)' == 'win-x64'">x64</PlatformTarget>
+        <PlatformTarget Condition=" '$(PlatformTarget)' == '' AND $(Platform) == 'AnyCPU' AND '$(NETCoreSdkRuntimeIdentifier)' == 'win-arm64'">arm64</PlatformTarget>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" $(TargetFramework.Contains('-desktop')) ">
+
+        <!-- DOES NOT WORK
+        <PackageReference Include="Microsoft.Web.WebView2" Aliases="WpfWebView" />
+        -->
+
+        <!-- THE FOLLOWING TWO REFERENCES WORK -->
+        <Reference Include="Microsoft.Web.WebView2.Core">
+          <HintPath>$(UserProfile)\.nuget\packages\microsoft.web.webview2\1.0.3179.45\lib_manual\netcoreapp3.0\Microsoft.Web.WebView2.Core.dll</HintPath>
+          <Aliases>WpfWebView</Aliases>
+        </Reference>        
+
+        <Reference Include="Microsoft.Web.WebView2.Wpf">
+          <HintPath>$(UserProfile)\.nuget\packages\microsoft.web.webview2\1.0.3179.45\lib_manual\net5.0-windows10.0.17763.0\Microsoft.Web.WebView2.Wpf.dll</HintPath>
+          <Aliases>WpfWebView</Aliases>
+        </Reference>        
+
+    </ItemGroup>
+
+    <ItemGroup Condition=" $(TargetFramework.Contains('-windows')) " >
+
+        <PackageReference Include="Microsoft.Web.WebView2" />
+        
+    </ItemGroup>
+
+
+</Project>
