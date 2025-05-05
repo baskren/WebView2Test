@@ -24,7 +24,6 @@
             Grid.Row="1"
             x:Name="myWebView"
             Margin="0"
-            Source="https://slashdot.org"
             />
     </Grid>
 </Page>
